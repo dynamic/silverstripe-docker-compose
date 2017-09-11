@@ -46,6 +46,10 @@ In your browser, navigate to the IP returned about, port `8080`
 
 `http://192.168.99.100:8080`
 
+### Webroot
+
+Once your environment has been built and the containers have been started, a `public` folder will be created. Place your project files there.
+
 ### Stop a Machine
 
 `docker-compose stop`
