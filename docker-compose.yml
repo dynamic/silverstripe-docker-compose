@@ -1,7 +1,7 @@
 version: '3'
 services:
  web:
-   build: .
+   image: dynamicagency/silverstripe-docker
    working_dir: /var/www
    ports:
         - 8080:80
