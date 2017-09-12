@@ -1,4 +1,4 @@
 /.idea
-/public
+/public/*
 _ss_environment.php
 .env
