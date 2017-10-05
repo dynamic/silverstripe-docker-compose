@@ -45,3 +45,7 @@ SS_DATABASE_NAME="yourproject"
 ### SSH Access
 
 `docker exec -it yourproject_web_1 bash`
+
+### Ubuntu/Linux caveats
+[Images not being resampled/resized](https://serversforhackers.com/c/dckr-file-permissions)
+  - You may need to delete the session file in the docker container
