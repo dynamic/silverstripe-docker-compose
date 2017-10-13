@@ -2,6 +2,9 @@ version: '3'
 services:
  web:
    image: dynamicagency/silverstripe-docker
+   restart: always
+   depends_on:
+    - database
    working_dir: /var/www
    ports:
         - 8080:80
@@ -13,7 +16,6 @@ services:
    image: mysql
    volumes:
     - db-data:/var/lib/mysql
-   restart: always
    environment:
     - MYSQL_ALLOW_EMPTY_PASSWORD=true
 

@@ -24,6 +24,15 @@ From the directory `yourproject `:
 
 `docker-compose up -d`
 
+if you wish to disable the web and database containers from running at startup change `restart: always` to one of the following:
+```
+restart: "no"
+restart: always
+restart: on-failure
+restart: unless-stopped
+```
+[More information on restart policies.](https://blog.codeship.com/ensuring-containers-are-always-running-with-dockers-restart-policy/)
+
 Your site will be visible at [http://localhost:8080](http://localhost:8080)
 
 ### Webroot
