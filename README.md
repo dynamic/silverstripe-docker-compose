@@ -20,15 +20,19 @@ The template it creates provides:
 
 ## Installation
 
-1. `git clone https://github.com/dynamic/silverstripe-docker.git ./`
+1. `git clone -b linux https://github.com/dynamic/silverstripe-docker.git ./`
 Replace `./` if you wish to install into a sub directory
 
 2. Run `docker network create reverse-proxy` to create the network all the docker containers will run on. (You will be prompted to do this if you skip this step)
 
-## Commands
+3. Make sure you ran through the [docker post install](https://docs.docker.com/engine/installation/linux/linux-postinstall/#manage-docker-as-a-non-root-user)
 
-### new-dock
-`new-dock <folder> [<url>]` creates a new docker-compose project folder. 
+## Commands
+You may have to run `chmod +x new-dock dock`.
+you can run commands from the repo folder by pre-pending `./` to `new-docker` and `dock` commands.
+
+### new-docker
+`.new-docker <folder> [<url>]` creates a new docker-compose project folder. 
 It requires a folder to create te project. This folder name will also be used in creating the containers.
 The url is optional, and will default to using the folder name with `.dev` appended. `new-dock test t` will create a folder `test` and will be accesible with the url `t.dev`
 
@@ -61,6 +65,12 @@ SS_DATABASE_PASSWORD=""
 SS_DATABASE_NAME="yourproject"
 ```
 The database name doesn't really matter all that much.
+
+## Adminer
+To use adminer without going to localhost it is recomended to add `127.0.0.1 adminer.dev  www.adminer.dev` to the hosts file. (`/etc/hosts` on Ubuntu)
+Connecting to a database only requires the name of the database container. If the folder was name `test` the database container would be named `test_db`.
+Adminer will store containers it connected to (and the username/password) until the actual container is removed.
+The style can be changed by swapping out the `adminer.css` in the `public` folder.
 
 ## SSH Access
 use `docker ps` to find the container to ssh into. Usually its something like `folder_folder_web_1`.
