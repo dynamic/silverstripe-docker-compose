@@ -32,9 +32,9 @@ You may have to run `chmod +x new-dock dock`.
 you can run commands from the repo folder by pre-pending `./` to `new-docker` and `dock` commands.
 
 ### new-docker
-`.new-docker <folder> [<url>]` creates a new docker-compose project folder. 
+`new-docker <folder> [<url>]` creates a new docker-compose project folder. 
 It requires a folder to create te project. This folder name will also be used in creating the containers.
-The url is optional, and will default to using the folder name with `.dev` appended. `new-dock test t` will create a folder `test` and will be accesible with the url `t.dev`
+The url is optional, and will default to using the folder name with `.dev` appended. `new-dock test t` will create a folder `test` and will be accessible with the url `t.dev`
 
 
 ### dock
@@ -51,7 +51,7 @@ If no folder is specified all containers will be stopped.
 ## Webroot
 
 Once your environment has been built, a `public` folder will be created in `folder`. Place your project files there.
-If you are using silverstripe it is recommended to create a `silverstripe-cache` folder in `public`.
+If you are using SilverStripe it is recommended to create a `silverstripe-cache` folder in `public`.
 
 ## Database Info
 
@@ -67,7 +67,7 @@ SS_DATABASE_NAME="yourproject"
 The database name doesn't really matter all that much.
 
 ## Adminer
-To use adminer without going to localhost it is recomended to add `127.0.0.1 adminer.dev  www.adminer.dev` to the hosts file. (`/etc/hosts` on Ubuntu)
+To use adminer add `127.0.0.1 adminer.dev  www.adminer.dev` to the hosts file. (`/etc/hosts` on Ubuntu)
 Connecting to a database only requires the name of the database container. If the folder was name `test` the database container would be named `test_db`.
 Adminer will store containers it connected to (and the username/password) until the actual container is removed.
 The style can be changed by swapping out the `adminer.css` in the `public` folder.
