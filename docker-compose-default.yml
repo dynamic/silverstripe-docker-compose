@@ -1,0 +1,32 @@
+version: '3'
+services:
+ NAME_web:
+   image: dynamicagency/silverstripe-docker
+   restart: unless-stopped
+   working_dir: /var/www
+   volumes:
+    - .:/var/www
+    - ./public:/var/www/html
+   depends_on:
+    - NAME_db
+   environment:
+    - VIRTUAL_HOST=URL.dev,www.URL.dev
+   networks:
+    - reverse-proxy
+
+ NAME_db:
+   image: mysql
+   restart: unless-stopped
+   volumes:
+    - db-data:/var/lib/mysql
+   environment:
+    - MYSQL_ALLOW_EMPTY_PASSWORD=true
+   networks:
+    - reverse-proxy
+
+volumes:
+ db-data:
+
+networks:
+  reverse-proxy:
+    external: true

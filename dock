@@ -1,0 +1,33 @@
+#!/bin/bash
+
+command=$1
+box=$2
+
+cd /hdd/docker
+
+if [[ $command == 'up' ]]; then
+  if [[ ! "$(docker ps -q | grep nginx-proxy)" ]]; then
+    docker-compose up -d
+  else
+    echo 'reverse proxy is runnig'
+  fi
+
+  if [[ $box != "" ]] && [[ ! "$(docker ps -q | grep $box)" ]]; then
+    cd $box
+    docker-compose up -d
+  else
+    echo "$box is running"
+  fi
+
+elif [[ $command == 'halt' ]] || [[ $command == 'stop' ]]; then
+  if [[ $box != '' ]]; then
+    if [[ $box == 'all' ]]; then
+      docker stop $(docker ps -q)
+    else
+      cd $box
+      docker-compose stop
+    fi
+  fi
+fi
+
+

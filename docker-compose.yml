@@ -1,23 +1,42 @@
-version: '3'
+version: "3"
 services:
- web:
-   image: dynamicagency/silverstripe-docker
-   restart: always
-   depends_on:
-    - database
-   working_dir: /var/www
-   ports:
-        - 8080:80
-   volumes:
-    - .:/var/www
-    - ./public:/var/www/html
+  nginx-proxy:
+    image: brettt89/nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./public/certs:/etc/nginx/certs:ro
+      - certs:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+    networks:
+      - reverse-proxy
 
- database:
-   image: mysql
-   volumes:
-    - db-data:/var/lib/mysql
-   environment:
-    - MYSQL_ALLOW_EMPTY_PASSWORD=true
+  ngnix-ssl:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+
+  db_admin:
+    image: adminer
+    restart: always
+    volumes:
+      - ./public/adminer.css:/var/www/html/adminer.css
+      - ./public/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    environment:
+      - VIRTUAL_HOST=adminer.dev,www.adminer.dev
+    networks:
+      - reverse-proxy
 
 volumes:
- db-data:
+  certs:
+  vhost:
+
+networks:
+  reverse-proxy:
+    external: true
+
