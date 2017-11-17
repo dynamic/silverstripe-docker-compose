@@ -2,7 +2,9 @@
 
 command=$1
 box=$2
+var=$3
 
+# Start a docker-compose
 if [[ $command == 'up' ]]; then
   if [[ ! "$(docker ps -q | grep nginx-proxy)" ]]; then
     docker-compose up -d
@@ -17,6 +19,7 @@ if [[ $command == 'up' ]]; then
     echo "$box is running"
   fi
 
+# Stop a docker-compose
 elif [[ $command == 'halt' ]] || [[ $command == 'stop' ]]; then
   if [[ $box != '' ]]; then
     if [[ $box == 'all' ]]; then
@@ -26,6 +29,64 @@ elif [[ $command == 'halt' ]] || [[ $command == 'stop' ]]; then
       docker-compose stop
     fi
   fi
+
+# SSH into web
+elif [[ $command == 'ssh' ]]; then
+  # Get full container name 
+  webContainer=$(docker ps --format "{{.Names}}" -q | grep "$box.*web")
+  # If no container is found stop
+  if [[ ! $webContainer ]]; then
+    echo "No container found containing '$box'"
+    exit 1;
+  else
+    # if additional var is found use it as a user
+    if [[ $var != '' ]]; then
+      docker exec -it -u $var $webContainer bash
+    else
+      docker exec -it $webContainer bash
+    fi
+  fi
+
+# Create a new docker-compose
+elif [[ $command == 'create' ]] || [[ $command == 'new' ]]; then
+  if [[ $box == '' ]]; then
+    echo 'No folder name was specified'
+    exit 1;
+  fi
+
+  url=$var
+   # if url wasn't passed use box instead
+  if [[ $url = "" ]]; then
+    url=$box
+  fi
+
+  # creates the folder
+  mkdir $box
+  # copies the template file
+  cp docker-compose-default.yml $box/docker-compose.yml
+  cd $box
+
+  mkdir public
+  chown $USER:www-data -R public/
+  chmod 775 -R public/
+
+  mkdir html
+  chown $USER:www-data -R html/
+  chmod 775 -R html/
+
+  # replaces placeholders
+  sed -i "s/NAME/$box/g" docker-compose.yml
+  sed -i "s/URL/$url/g" docker-compose.yml
+
+  # add to hosts
+  echo "creating host entry"
+  sudo bash -c "echo '127.0.0.1 $url.dev  www.$url.dev' >> /etc/hosts"
+
+  # echo out results
+  echo "Created a new docker instance in folder: $box"
+  echo "With containers prefixed with $box"
+  echo "With the url of: $url.dev"
+
 fi
 
 

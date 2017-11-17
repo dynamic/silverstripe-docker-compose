@@ -28,22 +28,23 @@ Replace `./` if you wish to install into a sub directory
 3. Make sure you ran through the [docker post install](https://docs.docker.com/engine/installation/linux/linux-postinstall/#manage-docker-as-a-non-root-user)
 
 ## Commands
-You may have to run `chmod +x new-dock dock`.
-you can run commands from the repo folder by pre-pending `./` to `new-docker` and `dock` commands.
+You may have to run `chmod +x dock`.
+you can run commands from the repo folder by pre-pending `./` to the `dock` commands.
 
-### new-docker
-`new-docker <folder> [<url>]` creates a new docker-compose project folder. 
+### dock create
+`dock create <folder> [<url>]` or `dock new <folder> [<url>]` creates a new docker-compose project folder. 
 It requires a folder to create te project. This folder name will also be used in creating the containers.
-The url is optional, and will default to using the folder name with `.dev` appended. `new-dock test t` will create a folder `test` and will be accessible with the url `t.dev`
+The url is optional, and will default to using the folder name with `.dev` appended. `dock create test t` will create a folder `test` and will be accessible with the url `t.dev`
 
+### dock up
+`dock up <folder>` will start a docker-compose in a specified folder. It will also start the reverse proxy and adminer containers.
 
-### dock
-The `dock` command will allow starting and stopping docker-compose setups
+### dock ssh
+`dock ssh <folder> [<user>]` will ssh into a web container. 
+The specified folder does not need to be fully specified. If a docker-compose has a folder of `foobar`, `dock ssh foo` will find it.
+The user is purely optional and will default to root (what docker uses). For the default decker-compose file generated it is recommended to use the use `1000` for sspaks.
 
-#### dock up
-`dock up folder` will start a docker-compose in a specified folder. It will also start the reverse proxy and adminer containers.
-
-#### dock halt
+### dock halt
 `dock halt [<folder>]` or `dock stop [<folder>]` will stop a docker-compose in a specified folder.
 If no folder is specified all containers will be stopped.
 
@@ -71,10 +72,3 @@ To use adminer add `127.0.0.1 adminer.dev  www.adminer.dev` to the hosts file. (
 Connecting to a database only requires the name of the database container. If the folder was name `test` the database container would be named `test_db`.
 Adminer will store containers it connected to (and the username/password) until the actual container is removed.
 The style can be changed by swapping out the `adminer.css` in the `public` folder.
-
-## SSH Access
-use `docker ps` to find the container to ssh into. Usually its something like `folder_folder_web_1`.
-### root
-`docker exec -it <container_web_name> bash`
-### www-data
-`docker exec -it -u 1000 <container_web_name> bash`
