@@ -28,8 +28,9 @@ Replace `./` if you wish to install into a sub directory
 3. Make sure you ran through the [docker post install](https://docs.docker.com/engine/installation/linux/linux-postinstall/#manage-docker-as-a-non-root-user)
 
 ## Commands
-You may have to run `chmod +x dock`.
-you can run commands from the repo folder by pre-pending `./` to the `dock` commands.
+Run `chmod +x dock` to make the commands executable.
+you can run commands from the repo folder by pre-pending `./` to the `dock` command.
+To run the commands normally add `cd /path/to/local/repo` just below `#!/bin/bash` in the `dock` file. Then run `cp dock /usr/bin/`.
 
 ### dock create
 `dock create <folder> [<url>]` or `dock new <folder> [<url>]` creates a new docker-compose project folder. 
