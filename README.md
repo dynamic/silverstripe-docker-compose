@@ -1,9 +1,13 @@
-# Docker-Compose for SilverStripe Development
+# Docker-Compose for SilverStripe Development on Linux
 
-An apache and PHP 7.1 server. Intended for use with docker-compose.
+Creates a reverse proxy and adminer container. Has commands to easily create a new silverstripe docker-compose instance.
 
 It provides:
+- NGINX Proxy
+- Adminer
+- SSL? (unsure if this works)
 
+The template it creates provides:
 - Apache
 - PHP 7.1
 - MySQL
@@ -16,45 +20,51 @@ It provides:
 
 ## Installation
 
-`git clone https://github.com/dynamic/silverstripe-docker.git yourproject`
+1. `git clone https://github.com/dynamic/silverstripe-docker.git ./`
+Replace `./` if you wish to install into a sub directory
 
-## Usage
+2. Run `docker network create reverse-proxy` to create the network all the docker containers will run on. (You will be prompted to do this if you skip this step)
 
-From the directory `yourproject `:
+## Commands
 
-`docker-compose up -d`
+### new-dock
+`new-dock <folder> [<url>]` creates a new docker-compose project folder. 
+It requires a folder to create te project. This folder name will also be used in creating the containers.
+The url is optional, and will default to using the folder name with `.dev` appended. `new-dock test t` will create a folder `test` and will be accesible with the url `t.dev`
 
-if you wish to disable the web and database containers from running at startup change `restart: always` to one of the following:
-```
-restart: "no"
-restart: always
-restart: on-failure
-restart: unless-stopped
-```
-[More information on restart policies.](https://blog.codeship.com/ensuring-containers-are-always-running-with-dockers-restart-policy/)
 
-Your site will be visible at [http://localhost:8080](http://localhost:8080)
+### dock
+The `dock` command will allow starting and stopping docker-compose setups
 
-### Webroot
+#### dock up
+`dock up folder` will start a docker-compose in a specified folder. It will also start the reverse proxy and adminer containers.
 
-Once your environment has been built, a `public` folder will be created in `yourproject`. Place your project files there.
+#### dock halt
+`dock halt [<folder>]` or `dock stop [<folder>]` will stop a docker-compose in a specified folder.
+If no folder is specified all containers will be stopped.
 
-### Database Info
+
+## Webroot
+
+Once your environment has been built, a `public` folder will be created in `folder`. Place your project files there.
+If you are using silverstripe it is recommended to create a `silverstripe-cache` folder in `public`.
+
+## Database Info
 
 For SilverStripe projects:
 
 ```
 # DB credentials
-SS_DATABASE_SERVER="database"
+SS_DATABASE_SERVER="folder_db"
 SS_DATABASE_USERNAME="root"
 SS_DATABASE_PASSWORD=""
 SS_DATABASE_NAME="yourproject"
 ```
+The database name doesn't really matter all that much.
 
-### SSH Access
-
-`docker exec -it yourproject_web_1 bash`
-
-### Ubuntu/Linux caveats
-[Images not being resampled/resized](https://serversforhackers.com/c/dckr-file-permissions)
-  - You may need to delete the session file in the docker container
+## SSH Access
+use `docker ps` to find the container to ssh into. Usually its something like `folder_folder_web_1`.
+### root
+`docker exec -it <container_web_name> bash`
+### www-data
+`docker exec -it -u 1000 <container_web_name> bash`

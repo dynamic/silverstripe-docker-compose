@@ -3,8 +3,6 @@
 command=$1
 box=$2
 
-cd /hdd/docker
-
 if [[ $command == 'up' ]]; then
   if [[ ! "$(docker ps -q | grep nginx-proxy)" ]]; then
     docker-compose up -d
