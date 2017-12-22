@@ -35,7 +35,7 @@ To run the commands normally add `cd /path/to/local/repo` just below `#!/bin/bas
 ### dock create
 `dock create <folder> [<url>]` or `dock new <folder> [<url>]` creates a new docker-compose project folder. 
 It requires a folder to create te project. This folder name will also be used in creating the containers.
-The url is optional, and will default to using the folder name with `.dev` appended. `dock create test t` will create a folder `test` and will be accessible with the url `t.dev`
+The url is optional, and will default to using the folder name with the specified top level domain appended. `dock create test t` will create a folder `test` and will be accessible with the url `t.local`. To change the top level domain to something other than `.local` change `topDomain="local"` to `topDomain="NEW_TLD"`.
 
 ### dock up
 `dock up <folder>` will start a docker-compose in a specified folder. It will also start the reverse proxy and adminer containers.
@@ -69,7 +69,10 @@ SS_DATABASE_NAME="yourproject"
 The database name doesn't really matter all that much.
 
 ## Adminer
-To use adminer add `127.0.0.1 adminer.dev  www.adminer.dev` to the hosts file. (`/etc/hosts` on Ubuntu)
+To use adminer add `127.0.0.1 adminer.local  www.adminer.local` to the hosts file. (`/etc/hosts` on Ubuntu)
 Connecting to a database only requires the name of the database container. If the folder was name `test` the database container would be named `test_db`.
 Adminer will store containers it connected to (and the username/password) until the actual container is removed.
 The style can be changed by swapping out the `adminer.css` in the `public` folder.
+
+## Optional
+If having to be in the folder all the docker stuff is in is too much of a pain, add `cd /path/to/stuff` under `topDomain="local"`

@@ -28,7 +28,7 @@ services:
       - ./public/adminer.css:/var/www/html/adminer.css
       - ./public/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
-      - VIRTUAL_HOST=adminer.dev,www.adminer.dev
+      - VIRTUAL_HOST=adminer.local,www.adminer.local
     networks:
       - reverse-proxy
 

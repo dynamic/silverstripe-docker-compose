@@ -10,7 +10,7 @@ services:
    depends_on:
     - NAME_db
    environment:
-    - VIRTUAL_HOST=URL.dev,www.URL.dev
+    - VIRTUAL_HOST=URL.TOP_DOMAIN,www.URL.TOP_DOMAIN
    networks:
     - reverse-proxy
 

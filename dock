@@ -4,6 +4,12 @@ command=$1
 box=$2
 var=$3
 
+topDomain="local"
+
+function getDir() {
+  find ./* -maxdepth 0 -type d -print | grep "$1" | head -n1
+}
+
 # Start a docker-compose
 if [[ $command == 'up' ]]; then
   if [[ ! "$(docker ps -q | grep nginx-proxy)" ]]; then
@@ -13,8 +19,13 @@ if [[ $command == 'up' ]]; then
   fi
 
   if [[ $box != "" ]] && [[ ! "$(docker ps -q | grep $box)" ]]; then
-    cd $box
-    docker-compose up -d
+    dir=$(getDir $box)
+    if [[ $dir == "" ]]; then
+      echo "no folder with that name"
+    else
+      cd $dir
+      docker-compose up -d
+    fi
   else
     echo "$box is running"
   fi
@@ -25,8 +36,13 @@ elif [[ $command == 'halt' ]] || [[ $command == 'stop' ]]; then
     if [[ $box == 'all' ]]; then
       docker stop $(docker ps -q)
     else
-      cd $box
-      docker-compose stop
+      dir=$(getDir $box)
+      if [[ $dir == "" ]]; then
+        echo "no folder with that name"
+      else
+        cd $dir
+        docker-compose stop
+      fi
     fi
   fi
 
@@ -77,15 +93,16 @@ elif [[ $command == 'create' ]] || [[ $command == 'new' ]]; then
   # replaces placeholders
   sed -i "s/NAME/$box/g" docker-compose.yml
   sed -i "s/URL/$url/g" docker-compose.yml
+  sed -i "s/TOP_DOMAIN/$topDomain/g" docker-compose.yml
 
   # add to hosts
   echo "creating host entry"
-  sudo bash -c "echo '127.0.0.1 $url.dev  www.$url.dev' >> /etc/hosts"
+  sudo bash -c "echo '127.0.0.1 $url.$topDomain  www.$url.$topDomain' >> /etc/hosts"
 
   # echo out results
   echo "Created a new docker instance in folder: $box"
   echo "With containers prefixed with $box"
-  echo "With the url of: $url.dev"
+  echo "With the url of: $url.$topDomain"
 
 fi
 
