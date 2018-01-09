@@ -45,6 +45,11 @@ The url is optional, and will default to using the folder name with the specifie
 The specified folder does not need to be fully specified. If a docker-compose has a folder of `foobar`, `dock ssh foo` will find it.
 The user is purely optional and will default to root (what docker uses). For the default decker-compose file generated it is recommended to use the use `1000` for sspaks.
 
+### dock test
+`dock test <folder> [<arguments>]` will run phpunit tests in a web container.
+The specified folder does not need to be fully specified. If a docker-compose has a folder of `foobar`, `dock test foo` will find it.
+The arguments are purely optional and will be passed directly to phpunit. To run a single test use `--filter <class or method>`. For a test suite use `--testsuite <suite>`. Any arguments that phpunit can take can be used in the arguments.
+
 ### dock halt
 `dock halt [<folder>]` or `dock stop [<folder>]` will stop a docker-compose in a specified folder.
 If no folder is specified all containers will be stopped.

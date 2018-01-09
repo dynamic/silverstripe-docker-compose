@@ -63,6 +63,20 @@ elif [[ $command == 'ssh' ]]; then
     fi
   fi
 
+elif [[ $command == 'test' ]]; then
+  # Get full container name 
+  webContainer=$(docker ps --format "{{.Names}}" -q | grep "$box.*web")
+  # If no container is found stop
+  if [[ ! $webContainer ]]; then
+    echo "No container found containing '$box'"
+    exit 1;
+  else
+    vars=${@:3}
+    if [[ $vars > 0 ]]; then
+      docker exec -it -u 1000 -w /var/www/public $webContainer vendor/bin/phpunit $vars
+    fi
+  fi
+
 # Create a new docker-compose
 elif [[ $command == 'create' ]] || [[ $command == 'new' ]]; then
   if [[ $box == '' ]]; then
